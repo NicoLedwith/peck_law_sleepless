@@ -38,8 +38,7 @@
 
 	<section id="slide-show">
 		<div class="img-container">
-			<img class="slide-show-img" src="images/dog.png" alt="dog" id="img_0">
-			<img class="slide-show-img" src="images/people_legs.png" alt="people's legs" id="img_1">
+			<div id="img-div"></div>
 			<div class="text-items flex" data-aos="fade-zoom-in" data-aos-delay="300" data-aos-duration="1000">
 				<div class="main-text white-text">Your voice has the power. <br/> Let us help you find that voice</div>
 			<div class="sub-text white-text">We specialize in plaintiff, employment and civil rights law and we'll be there for you during your darkest  hour.</div>
@@ -207,27 +206,37 @@
 			$("#menu").fadeOut(300)
 		}
 
-		let images = $(".slide-show-img").toArray()
+		const imageNames = [
+			"dog.png",
+			"people_legs.png"
+		]
+		let imgIdx = 0 // default
+
+		const imgPrefix = name => "url(../images/" + name + ")"
+		const imgDiv = $("#img-div")
+
 		let dots = $(".img-index-dot")
 		dots.click(function (event) {
 			// grab data
-			let idx = event.target.id.split('_')[1]
-			let hideImgs = images.slice()
-			let hideDots = dots.slice()
-			hideImgs.splice(idx, 1)
-			hideDots.splice(idx, 1)
+			let idx = parseInt(event.target.id.split('_')[1])
+			console.log(imgIdx, idx)
+			if (imgIdx !== idx) {
+				let hideDots = dots.slice()
+				hideDots.splice(idx, 1)
 
-			// show new
-			$(images[idx]).fadeIn(1000)
-			$(dots[idx]).addClass("filled")
+				// show new
+				$(dots[idx]).addClass("filled")
 
-			// hide old
-			hideImgs.forEach(function (i) {
-				$(i).hide()
-			})
-			hideDots.toArray().forEach(function (d) {
-				$(d).removeClass("filled")
-			})
+				imgDiv.fadeOut(250, () => {
+					imgDiv.css("background-image", imgPrefix(imageNames[idx]))
+					imgDiv.fadeIn(250)
+				})
+				
+				hideDots.toArray().forEach(function (d) {
+					$(d).removeClass("filled")
+				})
+				imgIdx = idx
+			}
 		})
 	</script>
 </html>
